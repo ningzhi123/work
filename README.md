@@ -42,7 +42,7 @@ https://console.qweather.com/#/apps?lang=zh
 明日工作
 
 明日日期：{{date.DATA}}
-明日天气：{{region.DATA}} {{weather.DATA}} {{temp.DATA}} {{wind_dir.DATA}}
+明日天气：{{region.DATA}}    {{weather.DATA}}    {{temp.DATA}}    {{wind_dir.DATA}}
 明日工作： {{work.DATA}}
 
 结婚倒计时 {{wedding.DATA}} 
