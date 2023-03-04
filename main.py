@@ -1,11 +1,11 @@
 import random
 from time import localtime
 from requests import get, post
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from zhdate import ZhDate
 import sys
 import os
- 
+import openpyxl
  
 def get_color():
     # 获取随机颜色
@@ -50,14 +50,14 @@ def get_weather(region):
     else:
         # 获取地区的location--id
         location_id = response["location"][0]["id"]
-    weather_url = "https://devapi.qweather.com/v7/weather/now?location={}&key={}".format(location_id, key)
+    weather_url = "https://devapi.qweather.com/v7/weather/3d?location={}&key={}".format(location_id, key)
     response = get(weather_url, headers=headers).json()
     # 天气
-    weather = response["now"]["text"]
+    weather = response["daily"][1]["textDay"]
     # 当前温度
-    temp = response["now"]["temp"] + u"\N{DEGREE SIGN}" + "C"
+    temp = response["daily"][1]["tempMin"] + "-" + response["daily"][1]["tempMax"] + u"\N{DEGREE SIGN}" + "C"
     # 风向
-    wind_dir = response["now"]["windDir"]
+    wind_dir = response["daily"][1]["windDirDay"]
     return weather, temp, wind_dir
  
  
@@ -112,6 +112,16 @@ def get_ciba():
     r = get(url, headers=headers)
     note_en = r.json()["content"]
     note_ch = r.json()["note"]
+
+    url = "https://api.mcloc.cn/love?type=json"
+    headers = {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                      'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
+    }
+    r = get(url, headers=headers)
+    note_ch = note_ch + "\r\n\r\n" + r.json()["data"]
+
     return note_ch, note_en
  
  
@@ -122,14 +132,39 @@ def send_message(to_user, access_token, region_name, weather, temp, wind_dir, no
     month = localtime().tm_mon
     day = localtime().tm_mday
     today = datetime.date(datetime(year=year, month=month, day=day))
-    week = week_list[today.isoweekday() % 7]
+    # week = week_list[today.isoweekday() % 7]
+    # 获取工作
+    workbook = openpyxl.load_workbook('work.xlsx')
+    sheet = workbook["Sheet"]
+    # 获取今天的日期
+    today = date.today()
+    # 通过 timedelta 对象加上一天
+    tomorrow = today + timedelta(days=1)
+    week = week_list[tomorrow.isoweekday() % 7]
+    work_str = "default"
+    print(str(tomorrow))
+    for i in range(1, sheet.max_row):
+        print(str(sheet.cell(row=i, column=1).value))
+        if str(tomorrow) in str(sheet.cell(row=i, column=1).value):
+                work_str = str(sheet.cell(row=i, column=3).value)
+                work_time = str(sheet.cell(row=i, column=4).value)
+    
+    if "None" == work_str:
+        work_str = "宝宝明天休息哟！"
+    elif "None" == work_time:
+        work_str = work_str
+        work_str = work_str + "\r\n宝宝确认下，没安排明天就休息哟！"
+    else:
+        work_str = work_str + "    " + work_time
+        work_str = work_str + "\r\n宝宝现在就核对班表，调好闹钟，明天要上班哟！！！"
+
     # 获取在一起的日子的日期格式
-    love_year = int(config["love_date"].split("-")[0])
-    love_month = int(config["love_date"].split("-")[1])
-    wedding = int(config["love_date"].split("-")[2])
-    love_date = date(love_year, love_month, wedding)
+    love_year = int(config["wdedding_date"].split("-")[0])
+    love_month = int(config["wdedding_date"].split("-")[1])
+    wedding = int(config["wdedding_date"].split("-")[2])
+    wdedding_date = date(love_year, love_month, wedding)
     # 获取在一起的日期差
-    weddings = str(wedding.__sub__(today)).split(" ")[0]
+    weddings = str(wdedding_date.__sub__(today)).split(" ")[0]
     # 获取所有生日数据
     birthdays = {}
     for k, v in config.items():
@@ -142,7 +177,7 @@ def send_message(to_user, access_token, region_name, weather, temp, wind_dir, no
         "topcolor": "#FF0000",
         "data": {
             "date": {
-                "value": "{} {}".format(today, week),
+                "value": "{} {}".format(tomorrow, week),
                 "color": get_color()
             },
             "region": {
@@ -162,8 +197,8 @@ def send_message(to_user, access_token, region_name, weather, temp, wind_dir, no
                 "color": get_color()
             },
             "work": {
-                "value": "D2",
-                "color": get_color()
+                "value": work_str,
+                "color": "#FF0000"
             },
             "wedding": {
                 "value": weddings,
@@ -179,13 +214,15 @@ def send_message(to_user, access_token, region_name, weather, temp, wind_dir, no
             }
         }
     }
+    data["data"]["work"] = {"value": work_str, "color": "#FF0000"}
+
     for key, value in birthdays.items():
         # 获取距离下次生日的时间
         birth_day = get_birthday(value["birthday"], year, today)
         if birth_day == 0:
-            birthday_data = "今天{}生日哦，祝{}生日快乐！".format(value["name"], value["name"])
+            birthday_data = "今天 {} 生日哦，祝 {} 生日快乐！".format(value["name"], value["name"])
         else:
-            birthday_data = "距离{}的生日还有{}天".format(value["name"], birth_day)
+            birthday_data = "距离 {} 的生日还有 {} 天".format(value["name"], birth_day)
         # 将生日数据插入data
         data["data"][key] = {"value": birthday_data, "color": get_color()}
     headers = {
