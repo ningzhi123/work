@@ -37,6 +37,22 @@ https://console.qweather.com/#/apps?lang=zh
 {{note_ch.DATA}}
 
 
++++++++++++++++++++++
+
+明日工作
+
+明日日期：{{date.DATA}}
+明日天气：{{region.DATA}} {{weather.DATA}} {{temp.DATA}} {{wind_dir.DATA}}
+明日工作： {{work.DATA}}
+
+结婚倒计时 {{wedding.DATA}} 
+
+{{birthday1.DATA}}
+{{birthday2.DATA}}
+
+{{note_en.DATA}}
+{{note_ch.DATA}}
+
 
 
 
