@@ -114,12 +114,12 @@ def get_ciba():
     note_ch = r.json()["note"]
 
     url = "https://api.mcloc.cn/love?type=json"
-    headers = {
-        'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                      'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
-    }
-    r = get(url, headers=headers)
+    # headers = {
+    #     'Content-Type': 'application/json',
+    #     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+    #                   'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
+    # }
+    r = get(url)
     note_ch = note_ch + "\r\n\r\n" + r.json()["data"]
 
     return note_ch, note_en
