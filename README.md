@@ -53,6 +53,7 @@ https://console.qweather.com/#/apps?lang=zh
 {{note_en.DATA}}
 {{note_ch.DATA}}
 
+{{love.DATA}}
 
 
 
