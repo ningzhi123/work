@@ -149,7 +149,7 @@ def send_message(to_user, access_token, region_name, weather, temp, wind_dir, no
     # 获取今天的日期
     today = date.today()
     # 通过 timedelta 对象加上一天
-    tomorrow = today + timedelta(days=1)
+    tomorrow = today + timedelta(days=0)
     week = week_list[tomorrow.isoweekday() % 7]
     work_str = "default"
     print(str(tomorrow))
@@ -160,13 +160,13 @@ def send_message(to_user, access_token, region_name, weather, temp, wind_dir, no
                 work_time = str(sheet.cell(row=i, column=4).value)
     
     if "None" == work_str:
-        work_str = "宝宝明天休息哟！"
+        work_str = "宝宝明天休息哟！！！"
     elif "None" == work_time:
         work_str = work_str
-        work_str = work_str + "\r\n宝宝确认下，没安排明天就休息哟！"
+        work_str = work_str + "    没安排明天就休息哟！！！"
     else:
         work_str = work_str + "    " + work_time
-        work_str = work_str + "\r\n宝宝现在就核对班表，调好闹钟，明天要上班哟！！！"
+        work_str = work_str + "    明天要上班哟！！！"
 
     # 获取在一起的日子的日期格式
     love_year = int(config["wdedding_date"].split("-")[0])

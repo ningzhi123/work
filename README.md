@@ -45,7 +45,7 @@ https://console.qweather.com/#/apps?lang=zh
 明日天气：{{region.DATA}}    {{weather.DATA}}    {{temp.DATA}}    {{wind_dir.DATA}}
 明日工作： {{work.DATA}}
 
-结婚倒计时 {{wedding.DATA}} 
+结婚倒计时 {{wedding.DATA}} 天
 
 {{birthday1.DATA}}
 {{birthday2.DATA}}
