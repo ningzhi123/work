@@ -149,7 +149,7 @@ def send_message(to_user, access_token, region_name, weather, temp, wind_dir, no
     # 获取今天的日期
     today = date.today()
     # 通过 timedelta 对象加上一天
-    tomorrow = today + timedelta(days=0)
+    tomorrow = today + timedelta(days=1)
     week = week_list[tomorrow.isoweekday() % 7]
     work_str = "default"
     print(str(tomorrow))
