@@ -33,7 +33,7 @@ for i in range(1, sheet.max_row):
 
         for j in range(5, sheet.max_column + 1):
             wb1_row += 1
-            if '星期' in sheet.cell(row=2, column=j).value:
+            if '星期' in sheet.cell(row=1, column=j).value:
                 txt = ""
                 if "-" in str(sheet.cell(row=3, column=j).value):
                     txt = str(sheet.cell(row=3, column=j).value)[5:10].center(6) + str(sheet.cell(row=2, column=j).value).center(
@@ -69,7 +69,7 @@ for i in range(1, sheet.max_row):
                     horizontal='center')
                 wb1.save(wb1_name)
             else:
-                txt = str(sheet.cell(row=2, column=j).value).ljust(
+                txt = str(sheet.cell(row=1, column=j).value).ljust(
                     8) + ":" + str(sheet.cell(row=i, column=j).value).ljust(8)
                 print(txt)
                 f.write(txt)
