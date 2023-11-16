@@ -24,37 +24,37 @@ for i in range(1, sheet.max_row):
         wb1_sheet.column_dimensions['C'].width = 14
         wb1_sheet.column_dimensions['D'].width = 6
         wb1_name = cell_value+"_" + \
-            str(sheet.cell(row=3, column=6).value)[5:10]+".xlsx"
+            str(sheet.cell(row=2, column=5).value)[5:10]+".xlsx"
         wb1_row = 0
         # 新建txt文档
         txt_name = cell_value+"_" + \
-            str(sheet.cell(row=3, column=6).value)[5:10]+".txt"
+            str(sheet.cell(row=2, column=5).value)[5:10]+".txt"
         f = open(txt_name, "w")
 
         for j in range(5, sheet.max_column + 1):
             wb1_row += 1
-            if '星期' in sheet.cell(row=1, column=j).value:
+            if sheet.cell(row=1, column=j).value is not None and '星期' in sheet.cell(row=1, column=j).value:
                 txt = ""
-                if "-" in str(sheet.cell(row=3, column=j).value):
-                    txt = str(sheet.cell(row=3, column=j).value)[5:10].center(6) + str(sheet.cell(row=2, column=j).value).center(
+                if "-" in str(sheet.cell(row=2, column=j).value):
+                    txt = str(sheet.cell(row=2, column=j).value)[5:10].center(6) + str(sheet.cell(row=1, column=j).value).center(
                         3) + str(sheet.cell(row=i, column=j).value).center(7) + str(sheet.cell(row=i+1, column=j).value).center(5)
                     print(txt)
                     f.write(txt)
                     f.write("\r\n")
                 else:
-                    txt = str(sheet.cell(row=3, column=j).value).center(6) + str(sheet.cell(row=2, column=j).value).center(
+                    txt = str(sheet.cell(row=2, column=j).value).center(6) + str(sheet.cell(row=1, column=j).value).center(
                         3) + str(sheet.cell(row=i, column=j).value).center(7) + str(sheet.cell(row=i+1, column=j).value).center(5)
                     print(txt)
                     f.write(txt)
                     f.write("\r\n")
                 wb1_sheet.cell(row=wb1_row, column=1).value = sheet.cell(
-                    row=3, column=j).value
+                    row=2, column=j).value
                 wb1_sheet.cell(row=wb1_row, column=1).alignment = openpyxl.styles.Alignment(
                     horizontal='center')
                 wb1_sheet.cell(row=wb1_row, column=1).number_format = 'yyyy-mm-dd;@'
 
                 wb1_sheet.cell(row=wb1_row, column=2).value = sheet.cell(
-                    row=2, column=j).value
+                    row=1, column=j).value
                 wb1_sheet.cell(row=wb1_row, column=2).alignment = openpyxl.styles.Alignment(
                     horizontal='center')
 
